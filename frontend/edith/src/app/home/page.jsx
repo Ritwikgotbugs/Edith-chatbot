@@ -43,7 +43,7 @@ function HomePage() {
           </div>
 
           {/* Tabs Section */}
-          <div className="mb-0 mt-6 p-11 bg-gray-700 rounded-2xl">
+          <div className="mb- mt-10 p-6 bg-gray-700 rounded-2xl">
             <ul>
               <li className="mt-2 p-2 mb-2 w-full bg-gray-500 hover:bg-zinc-600 cursor-pointer text-center transition-colors duration-400">Home</li>
               <li className="p-2 mb-2 w-full bg-gray-500 cursor-pointer hover:bg-zinc-600 text-center transition-colors duration-400">History</li>
@@ -57,7 +57,7 @@ function HomePage() {
           </div>
 
           {/* My Documents Section */}
-          <div className="mt-auto mb-0.5 p-4 bg-gray-700 rounded-2xl">
+          <div className="mt-auto mb-2 p-4 bg-gray-700 rounded-2xl">
             <div
               className="cursor-pointer text-xl text-center"
               onClick={() => setIsDocumentsExpanded(!isDocumentsExpanded)}
@@ -88,7 +88,7 @@ function HomePage() {
           </div>
 
           {/* Chat Bar */}
-          <div className="mt-4 relative">
+          <div className="mt-4 mb-2 relative">
             <input
               type="text"
               className="w-full bg-gray-300 text-slate-800 p-3 pr-16 border rounded-2xl"
