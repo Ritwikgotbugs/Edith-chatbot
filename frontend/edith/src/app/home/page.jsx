@@ -49,12 +49,12 @@ function HomePage() {
       <div className={`flex h-full ${showAdminLogin ? 'blur-sm' : ''}`}>
         {/* Collapsible Side Panel */}
         <div
-          className={`fixed top-2 left-2 z-40 h-full bg-gray-700 text-black p-4 flex flex-col transition-transform duration-300 ease-in-out ${
+          className={`fixed top-2 left-4 z-40 h-full bg-gray-700 text-black p-4 flex flex-col transition-transform duration-300 ease-in-out ${
             isNavCollapsed ? '-translate-x-full' : 'translate-x-0'
           } w-64`}
         >
           {/* Profile Section */}
-          <div className="mt-12 p-7 bg-gray-300 rounded-2xl">
+          <div className="mt-16 p-8 bg-gray-300 rounded-2xl">
             <h2 className="mb-3 text-xl font-bold">Samyak Tripathi</h2>
             <p className="mb-2 text-base">ID: 12345</p>
             <p className="text-base py-1">
@@ -66,7 +66,7 @@ function HomePage() {
           </div>
 
           {/* Tabs Section */}
-          <div className="mt-6 p-2 bg-gray-300 rounded-2xl">
+          <div className="mt-10 p-6 bg-gray-300 rounded-2xl">
             <ul>
               <li className="flex items-center justify-left mt-2 p-2 mb-2 w-full hover:bg-gray-500 cursor-pointer text-left text-lg transition-colors rounded-2xl duration-400">
                 <FaHome className="mr-6" /> Home
@@ -84,7 +84,7 @@ function HomePage() {
           </div>
 
           {/* My Documents Section */}
-          <div className="mt-auto mb-2 p-6 bg-gray-300 rounded-2xl">
+          <div className="mt-auto mb-8 p-6 bg-gray-300 rounded-2xl">
             <div
               className="cursor-pointer text-base text-center flex mr-2 mt-0 items-center justify-center"
               onClick={() => setIsDocumentsExpanded(!isDocumentsExpanded)}
@@ -103,20 +103,19 @@ function HomePage() {
               </div>
             </div>
           </div>
-
-          {/* Logout Button */}
-          <div className="mt-2 mb-4 p-6">
-            <button
-              onClick={handleLogout}
-              className="flex items-center justify-center w-full py-2 text-lg font-bold text-black bg-red-500 rounded-2xl hover:bg-red-600 transition-colors duration-300"
-            >
-              <FaSignOutAlt className="mr-2" /> Logout
-            </button>
-          </div>
         </div>
 
         {/* Main Panel */}
-        <div className={`flex-1 flex flex-col mt-2 text-white bg-gray-700 p-4 transition-all duration-300 ease-in-out ${isNavCollapsed ? 'ml-0' : 'ml-64'}`}>
+        <div className={` p-1 mr-0 flex-1 flex flex-col text-slate-800 bg-gray-700 p-4 transition-all duration-300 ease-in-out ${isNavCollapsed ? 'ml-0' : 'ml-64'}`}>
+          <div className="mt-0 mb-4 p-6">
+            <button
+            onClick={handleLogout}
+            className="absolute top-4 right-4 mr-8 px-4 py-1 bg-red-500 text-black rounded-lg flex items-center space-x-2 hover:bg-red-600 focus:outline-none"
+            >
+              <FaSignOutAlt size={20} />
+              <span className="text-lg font-semibold">Logout</span>
+              </button>
+        </div>
           {/* Chat Area */}
           <div className="flex-1 p-3 bg-gray-300 mr-8 rounded-2xl ml-16 overflow-y-auto">
             {chats.map((chat, index) => (
@@ -154,12 +153,12 @@ function HomePage() {
 
       {/* Admin Login Popup */}
       {showAdminLogin && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-00 bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div className="bg-gray-400 p-6 rounded-lg shadow-lg w-full max-w-sm">
             <h2 className="text-lg font-bold mb-4 text-center text-black">Admin Login</h2>
             <input
               type="password"
-              className="w-full text-slate-800 p-2 mb-4 border rounded"
+              className="w-full text-slate-950 p-2 mb-4 border rounded"
               placeholder="Enter Admin Password"
               value={adminPassword}
               onChange={(e) => setAdminPassword(e.target.value)}
