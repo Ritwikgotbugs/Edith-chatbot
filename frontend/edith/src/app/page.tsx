@@ -1,64 +1,45 @@
-'use client';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+"use client"
 
-export default function Home() {
-  const [expressData, setExpressData] = useState(null);
-  const [flaskData, setFlaskData] = useState(null);
-  const [inputValue, setInputValue] = useState<string>('');
-  const [responseMessage, setResponseMessage] = useState<string>('');
+import React, { useState }  from 'react';
+import  DocumentUpload  from "../components/DocumentUpload"; // Adjust the path as needed
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
+const Pages = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [uploadUrl, setUploadUrl] = useState<string | null>(null);
 
-  const handleSubmit = async () => {
-    try {
-      const response = await axios.post('http://localhost:5000/send', { text: inputValue });
-      setResponseMessage(response.data.message);
-      const res= await axios.get('http://localhost:8000/users');
-      console.log(res.data);
-    } catch (error) {
-      console.error('Error sending data:', error);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
     }
   };
 
-
-  useEffect(() => {
-    //Express
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/`)
-      .then(response => {
-        setExpressData(response.data.message);
-      })
-      .catch(error => {
-        console.error('Error fetching Express data:', error);
-      });
-
-    //Flask
-    axios.get(`${process.env.NEXT_PUBLIC_FLASK_URL}/data`)
-      .then(response => {
-        setFlaskData(response.data.message);
-      })
-      .catch(error => {
-        console.error('Error fetching Flask data:', error);
-      });
-  }, []);
+  const handleUpload = async () => {
+    if (file) {
+      try {
+        const url = await DocumentUpload(file);
+        setUploadUrl(url)
+        console.log('File uploaded successfully. URL:', url);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+  };
 
   return (
     <div>
-      <p>Express: {expressData}</p>
-      <p>Flask: {flaskData}</p>
-      <div>
-      <input
-        className='text-black'
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        placeholder="Enter a string"
-      />
-      <button onClick={handleSubmit}>Submit</button>
-      <p>{responseMessage}</p>
-    </div>
+      <h1>Upload a Document</h1>
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleUpload}>Upload</button>
+      {uploadUrl && (
+        <div>
+          <p>File uploaded successfully!</p>
+          <a href={uploadUrl} target="_blank" rel="noopener noreferrer">
+            View Uploaded File
+          </a>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default Pages;
