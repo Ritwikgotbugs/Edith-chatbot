@@ -5,37 +5,34 @@ import { FaSearch, FaPlus } from 'react-icons/fa'; // Import search and plus ico
 import { useRouter } from 'next/navigation'; // Import useRouter from Next.js
 
 function AdminPage() {
-  const [activeTab, setActiveTab] = useState(null); 
-  const [badWord, setBadWord] = useState(''); 
-  const [searchQuery, setSearchQuery] = useState(''); 
-  const [badWordsList, setBadWordsList] = useState([]); 
-  const [searchResult, setSearchResult] = useState(''); 
-  const [message, setMessage] = useState(''); 
-  const [employeeSearch, setEmployeeSearch] = useState(''); 
+  const [activeTab, setActiveTab] = useState(null);
+  const [badWord, setBadWord] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [badWordsList, setBadWordsList] = useState([]);
+  const [searchResult, setSearchResult] = useState('');
+  const [message, setMessage] = useState('');
+  const [employeeSearch, setEmployeeSearch] = useState('');
   const [employees, setEmployees] = useState([
-    { id: 1, name: 'Samyak Tripathi', role: 'A' },
-    { id: 2, name: 'Ritwik Sharma', role: 'B' },
-    { id: 3, name: 'Himanshu Bhadani', role: 'C' },
-    { id: 4, name: 'Manavi Lahoti', role: 'D' },
-    { id: 4, name: 'Annish Agarwal', role: 'D' },
-    { id: 4, name: 'Arnav Agarwal', role: 'D' },
-  ]); 
+    { id: 1, name: 'Samyak Tripathi', role: 'Intern' },
+    { id: 2, name: 'Ritwik Sharma', role: 'Developer' },
+    { id: 3, name: 'Himanshu Bhadani', role: 'Managing' },
+    { id: 4, name: 'Manavi Lahoti', role: 'Intern' },
+    { id: 5, name: 'Anish Agrawal', role: 'Intern' },
+    { id: 6, name: 'Arnav Agrawal', role: 'Developer' },
+  ]);
 
   const router = useRouter(); // Using Next.js router for navigation
 
-  
   const closeModal = () => setActiveTab(null);
 
-  
   const addBadWord = () => {
     if (badWord.trim()) {
-      setBadWordsList([...badWordsList, badWord]); 
+      setBadWordsList([...badWordsList, badWord]);
       setBadWord('');
-      setMessage('Bad word added'); 
-      setTimeout(() => setMessage(''), 2000); 
+      setMessage('Bad word added');
+      setTimeout(() => setMessage(''), 2000);
     }
   };
-
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -45,25 +42,29 @@ function AdminPage() {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      const foundWord = badWordsList.find((word) => word.toLowerCase() === searchQuery.toLowerCase());
-      setSearchResult(foundWord || ''); 
+      const foundWord = badWordsList.find(
+        (word) => word.toLowerCase() === searchQuery.toLowerCase()
+      );
+      setSearchResult(foundWord || '');
     } else {
       setSearchResult('');
     }
   };
 
- 
   const handleAdminLogout = () => {
-    router.push('/home'); 
+    router.push('/home');
   };
 
-  
   const handleRoleChange = (id, newRole) => {
-    setEmployees(employees.map(emp => emp.id === id ? { ...emp, role: newRole } : emp));
+    setEmployees(
+      employees.map((emp) =>
+        emp.id === id ? { ...emp, role: newRole } : emp
+      )
+    );
   };
 
   // Filtered list of employees based on search query
-  const filteredEmployees = employees.filter(emp =>
+  const filteredEmployees = employees.filter((emp) =>
     emp.name.toLowerCase().includes(employeeSearch.toLowerCase())
   );
 
@@ -75,45 +76,43 @@ function AdminPage() {
         <div className="w-1/4 ml-0 bg-gray-800 text-white p-4 flex flex-col">
           {/* Profile Section */}
           <div className="mt-2 p-12 bg-gray-700 rounded-2xl">
-            <h2 className="mb-4 text-xl font-bold">Admin Panel</h2>
-            <p className="text-base">Manage Users and Content</p>
+            <h2 className="mb-4 mt-4 text-xl text-center font-bold">Admin</h2>
+            <p className="text-base"></p>
           </div>
 
-          
-          <div className="mb-0 mt-6 p-4 bg-gray-700 rounded-2xl">
+          {/*<div className="mb-0 mt-6 p-5 bg-gray-700 rounded-2xl">
             <ul>
-              <li className="mt-2 p-2 mb-2 w-full bg-gray-500 hover:bg-zinc-600 cursor-pointer text-center transition-colors duration-400">Dashboard</li>
-              <li className="p-2 mb-2 w-full bg-gray-500 cursor-pointer hover:bg-zinc-600 text-center transition-colors duration-400">History</li>
-              <li className="p-2 mb-2 w-full bg-gray-500 hover:bg-zinc-600 cursor-pointer text-center transition-colors duration-400">Settings</li>
+              <li className="mt-2 p-2 mb-2 w-full bg-gray-500 hover:bg-zinc-600 cursor-pointer text-center transition-colors duration-400">
+                Home
+              </li>
+              <li className="p-2 mb-2 w-full bg-gray-500 cursor-pointer hover:bg-zinc-600 text-center transition-colors duration-400">
+                History
+              </li>
+              <li className="p-2 mb-2 w-full bg-gray-500 hover:bg-zinc-600 cursor-pointer text-center transition-colors duration-400">
+                Settings
+              </li>
             </ul>
-          </div>
+          </div>*/}
 
-          
-          <div className="h-32 p-4 bg-gray-700 rounded-lg mt-auto">
-            <button className="w-full p-3 bg-gray-500 hover:bg-zinc-600 cursor-pointer text-center transition-colors duration-300 mb-2">
-              My Docs
-            </button>
+          <div className="p-4 bg-gray-700 rounded-lg mt-auto">
             <button
               className="w-full p-2 bg-red-500 hover:bg-red-600 cursor-pointer text-center transition-colors duration-300"
-              onClick={handleAdminLogout} 
+              onClick={handleAdminLogout}
             >
               Admin Logout
             </button>
           </div>
         </div>
 
-        
-        <div className="flex-1 flex flex-col text-slate-800 bg-gray-800 p-4">
-          
-          <div className="flex-1 p-4 bg-gray-300 rounded-lg overflow-y-auto mb-4">
-            <h3 className="text-lg font-bold mb-2">Query Graph</h3>
+        {/* Main Content */}
+        <div className=" mt-2 flex-1 flex flex-col text-slate-800 bg-gray-800 p-4">
+          <div className="flex-1 p-4 bg-gray-300 rounded-2xl overflow-y-auto mb-4">
+            <h3 className="text-lg font-bold mb-4">Query Graph</h3>
             <div className="bg-white p-4 rounded-lg">
-              
               <p>Graph will be displayed here.</p>
             </div>
           </div>
 
-          
           <div className="flex justify-between space-x-4">
             <div
               className="cursor-pointer p-4 bg-gray-700 text-white rounded-lg flex-1 h-32 flex items-center justify-center"
@@ -139,11 +138,11 @@ function AdminPage() {
         </div>
       </div>
 
-      
+      {/* Modal Content */}
       {activeTab && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="w-3/4 h-3/4 bg-white p-4 rounded-lg overflow-y-auto relative">
-            
+            {/* Close Button */}
             <button
               className="absolute top-4 right-4 text-black text-xl font-bold"
               onClick={closeModal}
@@ -151,12 +150,12 @@ function AdminPage() {
               &times;
             </button>
 
-            
+            {/* Role Management Tab */}
             {activeTab === 'roleManagement' && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Role Management</h2>
 
-                
+                {/* Search Employees */}
                 <div className="flex items-center mb-4">
                   <input
                     type="text"
@@ -170,20 +169,24 @@ function AdminPage() {
                   </button>
                 </div>
 
-                
+                {/* Employee List */}
                 <div className="bg-gray-200 p-4 rounded-lg mt-4">
                   {filteredEmployees.map((employee) => (
-                    <div key={employee.id} className="flex items-center justify-between mb-4 p-2 bg-slate-300 rounded">
+                    <div
+                      key={employee.id}
+                      className="flex items-center justify-between mb-4 p-2 bg-slate-300 rounded"
+                    >
                       <span className="text-gray-800">{employee.name}</span>
                       <select
                         className="p-2 bg-slate-400 text-white rounded"
                         value={employee.role}
-                        onChange={(e) => handleRoleChange(employee.id, e.target.value)}
+                        onChange={(e) =>
+                          handleRoleChange(employee.id, e.target.value)
+                        }
                       >
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
+                        <option value="Intern">Intern</option>
+                        <option value="Developer">Developer</option>
+                        <option value="Manager">Manager</option>
                       </select>
                     </div>
                   ))}
@@ -191,12 +194,12 @@ function AdminPage() {
               </div>
             )}
 
-            
+            {/* Bad Words Management Tab */}
             {activeTab === 'badWords' && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Bad Words Management</h2>
 
-                
+                {/* Search Bad Words */}
                 <div className="flex items-center mb-4">
                   <input
                     type="text"
@@ -205,12 +208,15 @@ function AdminPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
-                  <button className="p-2 bg-blue-600 text-white rounded-r-lg" onClick={handleSearch}>
+                  <button
+                    className="p-2 bg-blue-600 text-white rounded-r-lg"
+                    onClick={handleSearch}
+                  >
                     <FaSearch />
                   </button>
                 </div>
 
-                
+                {/* Add New Bad Word */}
                 <div className="flex items-center mb-4">
                   <input
                     type="text"
@@ -228,14 +234,14 @@ function AdminPage() {
                   </button>
                 </div>
 
-                
+                {/* Message Display */}
                 {message && (
                   <div className="bg-green-200 p-4 rounded-lg mb-4">
                     <p className="text-green-800">{message}</p>
                   </div>
                 )}
 
-                
+                {/* Search Result Display */}
                 {searchResult && (
                   <div className="bg-gray-200 p-4 rounded-lg mt-8">
                     <p className="text-gray-800">{searchResult}</p>
@@ -244,7 +250,7 @@ function AdminPage() {
               </div>
             )}
 
-            
+            {/* Document Update Tab */}
             {activeTab === 'documentUpdate' && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Document Update</h2>
