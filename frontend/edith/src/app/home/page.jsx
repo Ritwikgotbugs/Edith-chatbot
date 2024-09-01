@@ -10,7 +10,7 @@ function HomePage() {
   const [adminPassword, setAdminPassword] = useState('');
   const [isDocumentsExpanded, setIsDocumentsExpanded] = useState(false);
 
-  const router = useRouter(); // Using Next.js router for navigation
+  const router = useRouter(); 
 
   const handleSendMessage = () => {
     if (currentMessage.trim()) {
