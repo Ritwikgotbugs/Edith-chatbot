@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaHome, FaHistory, FaUserLock, FaFolderOpen, FaPaperPlane, FaBars, FaTimes } from 'react-icons/fa'; // Import icons
+import { FaHome, FaHistory, FaUserLock, FaFolderOpen, FaPaperPlane, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa'; // Import icons
 
 function HomePage() {
   const [chats, setChats] = useState([]);
@@ -31,6 +31,10 @@ function HomePage() {
     }
   };
 
+  const handleLogout = () => {
+    router.push('/login'); // Navigate back to the LoginPage
+  };
+
   return (
     <div className="relative h-screen bg-gray-700">
       {/* Hamburger/Cross Menu Button */}
@@ -51,8 +55,8 @@ function HomePage() {
         >
           {/* Profile Section */}
           <div className="mt-12 p-7 bg-gray-300 rounded-2xl">
-            <h2 className="mb-4 text-2xl font-bold">Samyak Tripathi</h2>
-            <p className="mb-3 text-base">ID: 12345</p>
+            <h2 className="mb-3 text-xl font-bold">Samyak Tripathi</h2>
+            <p className="mb-2 text-base">ID: 12345</p>
             <p className="text-base py-1">
               Role :{' '}
               <span className="bg-black ml-1 text-base text-white rounded-3xl py-1 px-3.5">
@@ -62,7 +66,7 @@ function HomePage() {
           </div>
 
           {/* Tabs Section */}
-          <div className="mt-10 p-6 bg-gray-300 rounded-2xl">
+          <div className="mt-6 p-2 bg-gray-300 rounded-2xl">
             <ul>
               <li className="flex items-center justify-left mt-2 p-2 mb-2 w-full hover:bg-gray-500 cursor-pointer text-left text-lg transition-colors rounded-2xl duration-400">
                 <FaHome className="mr-6" /> Home
@@ -82,7 +86,7 @@ function HomePage() {
           {/* My Documents Section */}
           <div className="mt-auto mb-2 p-6 bg-gray-300 rounded-2xl">
             <div
-              className="cursor-pointer text-xl text-center flex mr-2 mt-0 items-center justify-center"
+              className="cursor-pointer text-base text-center flex mr-2 mt-0 items-center justify-center"
               onClick={() => setIsDocumentsExpanded(!isDocumentsExpanded)}
             >
               <FaFolderOpen className="mr-3" /> My Documents
@@ -99,6 +103,16 @@ function HomePage() {
               </div>
             </div>
           </div>
+
+          {/* Logout Button */}
+          <div className="mt-2 mb-4 p-6">
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-center w-full py-2 text-lg font-bold text-black bg-red-500 rounded-2xl hover:bg-red-600 transition-colors duration-300"
+            >
+              <FaSignOutAlt className="mr-2" /> Logout
+            </button>
+          </div>
         </div>
 
         {/* Main Panel */}
@@ -107,7 +121,7 @@ function HomePage() {
           <div className="flex-1 p-3 bg-gray-300 mr-8 rounded-2xl ml-16 overflow-y-auto">
             {chats.map((chat, index) => (
               <div key={index} className={`mb-4 ${chat.from === 'user' ? 'text-right' : ''}`}>
-                <div className={`p-2 ${chat.from === 'user' ? 'bg-slate-800 text-white' : 'bg-blue-500 text-slate-800'} rounded w-max ${chat.from === 'user' ? 'ml-auto' : ''}`}>
+                <div className={`p-2 ${chat.from === 'user' ? 'bg-slate-800 text-white text-xl mr-3 mt-2' : 'bg-blue-500 text-slate-800'} rounded w-max ${chat.from === 'user' ? 'ml-auto' : ''}`}>
                   {chat.message}
                 </div>
               </div>
@@ -115,7 +129,7 @@ function HomePage() {
           </div>
 
           {/* Chat Bar */}
-          <div className="mt-4 mb-2 px-1 ml-16 mr-8 relative">
+          <div className="mt-4 mb-2 px-1 ml-16 mr-7 relative">
             <input
               type="text"
               className="flex-1 bg-gray-300 w-full text-slate-800 px-1 py-3 border rounded-2xl"
@@ -130,7 +144,7 @@ function HomePage() {
             />
             <button
               onClick={handleSendMessage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black hover:bg-blue-950 text-white font-bold py-1 px-4 rounded-3xl flex items-center justify-center"
+              className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-black hover:bg-blue-950 text-white font-bold py-2 px-5 rounded-3xl flex items-center justify-center"
             >
               <FaPaperPlane className="mr-1" />
             </button>

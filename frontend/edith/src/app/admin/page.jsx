@@ -1,8 +1,8 @@
 "use client"; // Correct directive
 
 import React, { useState } from 'react';
-import { FaSearch, FaPlus } from 'react-icons/fa'; // Import search and plus icons
-import { useRouter } from 'next/navigation'; // Import useRouter from Next.js
+import { useRouter } from 'next/navigation';
+import { FaHome, FaHistory, FaUserLock, FaFolderOpen, FaPaperPlane, FaBars, FaTimes, FaSearch, FaPlus, FaSignOutAlt } from 'react-icons/fa'; // Import icons
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState(null);
@@ -10,7 +10,6 @@ function AdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [badWordsList, setBadWordsList] = useState([]);
   const [searchResult, setSearchResult] = useState('');
-  const [message, setMessage] = useState('');
   const [employeeSearch, setEmployeeSearch] = useState('');
   const [employees, setEmployees] = useState([
     { id: 1, name: 'Samyak Tripathi', role: 'Intern' },
@@ -20,36 +19,13 @@ function AdminPage() {
     { id: 5, name: 'Anish Agrawal', role: 'Intern' },
     { id: 6, name: 'Arnav Agrawal', role: 'Developer' },
   ]);
-
+  
+  const [isDocumentsExpanded, setIsDocumentsExpanded] = useState(false);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(true); // State for collapsible side nav
+  
   const router = useRouter(); // Using Next.js router for navigation
 
   const closeModal = () => setActiveTab(null);
-
-  const addBadWord = () => {
-    if (badWord.trim()) {
-      setBadWordsList([...badWordsList, badWord]);
-      setBadWord('');
-      setMessage('Bad word added');
-      setTimeout(() => setMessage(''), 2000);
-    }
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      addBadWord();
-    }
-  };
-
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      const foundWord = badWordsList.find(
-        (word) => word.toLowerCase() === searchQuery.toLowerCase()
-      );
-      setSearchResult(foundWord || '');
-    } else {
-      setSearchResult('');
-    }
-  };
 
   const handleAdminLogout = () => {
     router.push('/home');
@@ -63,50 +39,85 @@ function AdminPage() {
     );
   };
 
-  // Filtered list of employees based on search query
   const filteredEmployees = employees.filter((emp) =>
     emp.name.toLowerCase().includes(employeeSearch.toLowerCase())
   );
 
   return (
-    <div className="relative h-screen bg-gray-800">
-      {/* Main Content Area */}
+    <div className="relative h-screen bg-gray-700">
+      {/* Hamburger/Cross Menu Button */}
+      <button
+        className="absolute top-2 left-4 mt-2 z-50 p-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none"
+        onClick={() => setIsNavCollapsed(!isNavCollapsed)}
+      >
+        {isNavCollapsed ? <FaBars size={24} /> : <FaTimes size={24} />} {/* Toggle between icons */}
+      </button>
+
       <div className="flex h-full">
-        {/* Side Panel */}
-        <div className="w-1/4 ml-0 bg-gray-800 text-white p-4 flex flex-col">
+        {/* Collapsible Side Panel */}
+        <div
+          className={`fixed top-2 left-2 z-40 h-full bg-gray-700 text-black p-4 flex flex-col transition-transform duration-300 ease-in-out ${
+            isNavCollapsed ? '-translate-x-full' : 'translate-x-0'
+          } w-64`}
+        >
           {/* Profile Section */}
-          <div className="mt-2 p-12 bg-gray-700 rounded-2xl">
-            <h2 className="mb-4 mt-4 text-xl text-center font-bold">Admin</h2>
-            <p className="text-base"></p>
+          <div className="mt-12 p-7 bg-gray-300 rounded-2xl">
+            <h2 className="mb-3 text-xl font-bold">Samyak Tripathi</h2>
+            <p className="mb-2 text-base">ID: 12345</p>
+            <p className="text-base py-1">
+              Role :{' '}
+              <span className="bg-black ml-1 text-base text-white rounded-3xl py-1 px-3.5">
+                Developer
+              </span>
+            </p>
           </div>
 
-          {/*<div className="mb-0 mt-6 p-5 bg-gray-700 rounded-2xl">
+          {/* Tabs Section */}
+          <div className="mt-9 p-6 bg-gray-300 rounded-2xl">
             <ul>
-              <li className="mt-2 p-2 mb-2 w-full bg-gray-500 hover:bg-zinc-600 cursor-pointer text-center transition-colors duration-400">
-                Home
+              <li className="flex items-center justify-left mt-2 p-2 mb-2 w-full hover:bg-gray-500 cursor-pointer text-left text-lg transition-colors rounded-2xl duration-400">
+                <FaHome className="mr-6" /> Home
               </li>
-              <li className="p-2 mb-2 w-full bg-gray-500 cursor-pointer hover:bg-zinc-600 text-center transition-colors duration-400">
-                History
-              </li>
-              <li className="p-2 mb-2 w-full bg-gray-500 hover:bg-zinc-600 cursor-pointer text-center transition-colors duration-400">
-                Settings
+              <li className="flex items-center justify-left p-2 mb-2 w-full cursor-pointer hover:bg-gray-500 text-left text-lg transition-colors rounded-2xl duration-400">
+                <FaHistory className="mr-6" /> History
               </li>
             </ul>
-          </div>*/}
+          </div>
 
-          <div className="p-4 bg-gray-700 rounded-lg mt-auto">
-            <button
-              className="w-full p-2 bg-red-500 hover:bg-red-600 cursor-pointer text-center transition-colors duration-300"
-              onClick={handleAdminLogout}
+          {/* My Documents Section */}
+          <div className="mt-auto mb-2 p-6 bg-gray-300 rounded-2xl">
+            <div
+              className="cursor-pointer text-base text-center flex mr-2 mt-0 items-center justify-center"
+              onClick={() => setIsDocumentsExpanded(!isDocumentsExpanded)}
             >
-              Admin Logout
+              <FaFolderOpen className="mr-3" /> My Documents
+            </div>
+            <div
+              className={`overflow-hidden transition-[max-height] duration-500 ease-in-out ${
+                isDocumentsExpanded ? 'max-h-40' : 'max-h-0'
+              }`}
+            >
+              <div className="mt-4">
+                <p className="text-base text-center">Document 1</p>
+                <p className="text-base text-center">Document 2</p>
+                <p className="text-base text-center">Document 3</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2 mb-4 p-6">
+            <button
+              onClick={handleAdminLogout}
+              className="flex items-center justify-center w-full py-2 text-lg font-bold text-black bg-red-500 rounded-2xl hover:bg-red-600 transition-colors duration-300"
+            >
+              <FaSignOutAlt className="mr-2" /> Logout
             </button>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className=" mt-2 flex-1 flex flex-col text-slate-800 bg-gray-800 p-4">
-          <div className="flex-1 p-4 bg-gray-300 rounded-2xl overflow-y-auto mb-4">
+        <div className={`mt-2 flex-1 flex flex-col text-slate-800 bg-gray-700 p-4 transition-all duration-300 ease-in-out ${isNavCollapsed ? 'ml-0' : 'ml-64'}`}>
+          <div className="flex-1 p-3 bg-gray-300 mr-1 rounded-2xl ml-16 overflow-y-auto mb-2">
             <h3 className="text-lg font-bold mb-4">Query Graph</h3>
             <div className="bg-white p-4 rounded-lg">
               <p>Graph will be displayed here.</p>
@@ -115,21 +126,21 @@ function AdminPage() {
 
           <div className="flex justify-between space-x-4">
             <div
-              className="cursor-pointer p-4 bg-gray-700 text-white rounded-lg flex-1 h-32 flex items-center justify-center"
+              className="cursor-pointer p-2 bg-gray-800 ml-16 hover:bg-gray-900 text-white rounded-lg flex-1 h-32 flex items-center justify-center"
               onClick={() => setActiveTab('badWords')}
             >
               Bad Words Management
             </div>
 
             <div
-              className="cursor-pointer p-4 bg-gray-700 text-white rounded-lg flex-1 h-32 flex items-center justify-center"
+              className="cursor-pointer p-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex-1 h-32 flex items-center justify-center"
               onClick={() => setActiveTab('roleManagement')}
             >
               Role Management
             </div>
 
             <div
-              className="cursor-pointer p-4 bg-gray-700 text-white rounded-lg flex-1 h-32 flex items-center justify-center"
+              className="cursor-pointer p-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex-1 h-32 flex items-center justify-center"
               onClick={() => setActiveTab('documentUpdate')}
             >
               Document Update
@@ -209,44 +220,43 @@ function AdminPage() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                   <button
-                    className="p-2 bg-blue-600 text-white rounded-r-lg"
-                    onClick={handleSearch}
+                    className="p-2 bg-green-600 text-white rounded-r-lg"
+                    onClick={() => setSearchResult('Search Result for: ' + searchQuery)}
                   >
                     <FaSearch />
                   </button>
                 </div>
 
-                {/* Add New Bad Word */}
+                {searchResult && (
+                  <p className="text-lg font-semibold mb-4">{searchResult}</p>
+                )}
+
                 <div className="flex items-center mb-4">
                   <input
                     type="text"
-                    placeholder="Add new bad word"
+                    placeholder="Add a bad word"
                     className="flex-grow p-2 border border-gray-400 rounded-l-lg text-black"
                     value={badWord}
                     onChange={(e) => setBadWord(e.target.value)}
-                    onKeyDown={handleKeyDown}
                   />
                   <button
-                    className="p-2 bg-blue-600 text-white rounded-r-lg"
-                    onClick={addBadWord}
+                    className="p-2 bg-red-600 text-white rounded-r-lg"
+                    onClick={() => {
+                      setBadWordsList([...badWordsList, badWord]);
+                      setBadWord('');
+                    }}
                   >
                     <FaPlus />
                   </button>
                 </div>
 
-                {/* Message Display */}
-                {message && (
-                  <div className="bg-green-200 p-4 rounded-lg mb-4">
-                    <p className="text-green-800">{message}</p>
-                  </div>
-                )}
-
-                {/* Search Result Display */}
-                {searchResult && (
-                  <div className="bg-gray-200 p-4 rounded-lg mt-8">
-                    <p className="text-gray-800">{searchResult}</p>
-                  </div>
-                )}
+                <ul className="list-disc list-inside bg-gray-200 p-4 rounded-lg">
+                  {badWordsList.map((word, index) => (
+                    <li key={index} className="text-red-600">
+                      {word}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 
@@ -254,7 +264,7 @@ function AdminPage() {
             {activeTab === 'documentUpdate' && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Document Update</h2>
-                <p>Update documents here.</p>
+                <p>Document Update Feature Here</p>
               </div>
             )}
           </div>
