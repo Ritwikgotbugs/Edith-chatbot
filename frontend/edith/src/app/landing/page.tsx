@@ -1,7 +1,7 @@
 "use client"; // Correct directive
 
 import React from "react";
-import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
+import { useRouter } from "next/navigation";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import ComponentsSection from "./features";
@@ -10,10 +10,10 @@ import InvestorsSection from "./investors";
 const inter = Inter({ subsets: ["latin"] });
 
 function LandingPage() {
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
 
   const handleGetStarted = () => {
-    router.push("/login"); // Navigate to the login page when button is clicked
+    router.push("/login"); 
   };
 
   return (
