@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { db, auth } from '@/firebase/client';
 import { doc, getDoc } from 'firebase/firestore';
-import { Home, History, LogIn, FileText, Menu, ChevronLeft } from 'lucide-react';
+import { Home, History, FileText, Menu, ChevronLeft } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '../ui/accordion';
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar'; // Assuming you're using shadcn/ui components
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface UserProfile {
   name: string;
@@ -12,9 +14,11 @@ interface UserProfile {
   role: string;
 }
 
-const Sidebar: React.FC = () => {
+const SidebarContent: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile>({ name: '', empID: '', role: '' });
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -44,6 +48,10 @@ const Sidebar: React.FC = () => {
     setIsCollapsed(!isCollapsed);
   };
 
+  const navigateTo = (url: string) => {
+    router.push(url);
+  };
+
   return (
     <aside
       className={`transition-width duration-300 bg-gray-800 text-white p-4 space-y-4 flex flex-col justify-between h-full ${
@@ -57,16 +65,16 @@ const Sidebar: React.FC = () => {
           </Button>
         </div>
         <div className={`pb-4 flex justify-center my-5 ${isCollapsed ? 'block' : 'flex items-center'}`}>
-        <Avatar className={`${isCollapsed ? 'h-10 w-10' : 'h-20 w-20'}`}>
-          <AvatarImage src="https://images/shadcn" alt={userProfile.name} />
-          <AvatarFallback>{userProfile.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        {!isCollapsed && <p className="ml-2">{userProfile.name}</p>}
-      </div>
+          <Avatar className={`${isCollapsed ? 'h-10 w-10' : 'h-20 w-20'}`}>
+            <AvatarImage src="https://images/shadcn" alt={userProfile.name} />
+            <AvatarFallback>{userProfile.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          {!isCollapsed && <p className="ml-2">{userProfile.name}</p>}
+        </div>
 
         {!isCollapsed && (
           <div className="p-2 text-white mb-5">
-            <h3 className="text-lg font-bold">Name:{userProfile.name}</h3>
+            <h3 className="text-lg font-bold">Name: {userProfile.name}</h3>
             <p>ID: {userProfile.empID}</p>
             <p>
               Role:{' '}
@@ -84,7 +92,28 @@ const Sidebar: React.FC = () => {
               {!isCollapsed && <span>Home</span>}
             </AccordionTrigger>
             <AccordionContent>
-              {!isCollapsed && <p>Your Home content goes here.</p>}
+              {!isCollapsed && (
+                <div className="flex flex-col space-y-2">
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start text-left no-underline hover:no-underline ${
+                      pathname === '/homepage' ? 'bg-gray-700' : ''
+                    }`}
+                    onClick={() => navigateTo('/homepage')}
+                  >
+                    Home
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start text-left no-underline hover:no-underline ${
+                      pathname === '/admin' ? 'bg-gray-700' : ''
+                    }`}
+                    onClick={() => navigateTo('/admin')}
+                  >
+                    Admin
+                  </Button>
+                </div>
+              )}
             </AccordionContent>
           </AccordionItem>
 
@@ -108,20 +137,11 @@ const Sidebar: React.FC = () => {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-
-        <Button
-          variant="ghost"
-          className="w-full justify-start text-left no-underline hover:no-underline"
-        >
-          <LogIn className="w-5 h-5" />
-          {!isCollapsed && <span className="ml-2">Admin Panel</span>}
-        </Button>
       </div>
-
-      {/* Avatar section */}
-      
     </aside>
   );
 };
+
+const Sidebar = dynamic(() => Promise.resolve(SidebarContent), { ssr: false });
 
 export default Sidebar;

@@ -1,14 +1,14 @@
-// components/Admin/QueryGraph.tsx
-
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart, registerables } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
+import { Bar } from 'recharts';
 
-Chart.register(...registerables);
+// Register required components with ChartJS
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const QueryGraph = () => {
-  // Bar chart data and options
-  const chartData = {
+  // Define the type for chart data
+  const chartData: ChartData<'bar'> = {
     labels: ['Keyword 1', 'Keyword 2', 'Keyword 3', 'Keyword 4', 'Keyword 5', 'Others'],
     datasets: [
       {
@@ -22,7 +22,8 @@ const QueryGraph = () => {
     ],
   };
 
-  const chartOptions = {
+  // Define the type for chart options
+  const chartOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
       legend: {
@@ -30,7 +31,7 @@ const QueryGraph = () => {
       },
       tooltip: {
         callbacks: {
-          label: function (context: { label: any; parsed: { y: any; }; }) {
+          label: function (context) {
             return `${context.label}: ${context.parsed.y}`;
           },
         },
@@ -58,7 +59,7 @@ const QueryGraph = () => {
     <div className="bg-gray-300 rounded-2xl p-6">
       <h3 className="text-2xl font-bold mb-4 text-gray-800">Query Graph</h3>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <Bar data={chartData} options={chartOptions} />
+        
       </div>
     </div>
   );
