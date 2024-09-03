@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   flask-app:
     build: ./Flask
@@ -13,4 +11,4 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./server:/index
+      - ./server:/index.js
