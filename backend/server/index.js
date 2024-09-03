@@ -1,18 +1,21 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
 const router = express.Router();
-require('dotenv').config(); 
+require("dotenv").config();
 
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: "http://54.252.173.222:81" }));
 app.use(express.json());
-
-router.get('/', (req, res) => {
-    res.json({ message: 'Hello from Express' });
+// Define a route
+router.get("/", (req, res) => {
+  console.error();
+  res.json({ message: "Hello from Express" });
 });
 
-app.use('/api', router);
+app.use("/api", router);
 
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`Server running on port ${PORT}`)
+);
