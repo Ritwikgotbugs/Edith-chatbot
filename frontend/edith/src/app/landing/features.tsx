@@ -70,7 +70,7 @@ const ComponentsSection = () => {
             <h2 className="text-2xl font-semibold text-gray-700 capitalize dark:text-white">Simple & Clean Designs</h2>
 
             <p className="text-gray-500 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident ab nulla quod dignissimos vel non corrupti doloribus voluptatum eveniet
+              Lorem ipsum sit amet consectetur adipisicing elit. Provident ab nulla quod dignissimos vel non corrupti doloribus voluptatum eveniet
             </p>
 
             <a
