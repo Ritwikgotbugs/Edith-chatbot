@@ -1,33 +1,59 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { db } from '@/firebase/client';
 
 interface Employee {
-  id: number;
+  id: string;
   name: string;
   role: string;
 }
 
 const RoleManagement: React.FC = () => {
   const [employeeSearch, setEmployeeSearch] = useState('');
-  const [employees, setEmployees] = useState<Employee[]>([
-    { id: 1, name: 'Samyak Tripathi', role: 'Intern' },
-    { id: 2, name: 'Ritwik Sharma', role: 'Developer' },
-    { id: 3, name: 'Himanshu Bhadani', role: 'Managing' },
-    { id: 4, name: 'Manavi Lahoti', role: 'Intern' },
-    { id: 5, name: 'Anish Agrawal', role: 'Intern' },
-    { id: 6, name: 'Arnav Agrawal', role: 'Developer' },
-  ]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'users'));
+        const employeesData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          name: doc.data().name,
+          role: doc.data().role,
+        }));
+        setEmployees(employeesData);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching employees: ', error);
+        setLoading(false);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   const filteredEmployees = employees.filter((emp) =>
     emp.name.toLowerCase().includes(employeeSearch.toLowerCase())
   );
 
-  const handleRoleChange = (id: number, newRole: string) => {
-    setEmployees(
-      employees.map((emp) =>
-        emp.id === id ? { ...emp, role: newRole } : emp
-      )
-    );
+  const handleRoleChange = async (id: string, newRole: string) => {
+    try {
+      const employeeDocRef = doc(db, 'users', id);
+      await updateDoc(employeeDocRef, { role: newRole });
+      setEmployees(
+        employees.map((emp) =>
+          emp.id === id ? { ...emp, role: newRole } : emp
+        )
+      );
+    } catch (error) {
+      console.error('Error updating role: ', error);
+    }
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div>
@@ -46,7 +72,7 @@ const RoleManagement: React.FC = () => {
           <li key={employee.id} className="flex justify-between items-center py-3">
             <div>
               <p className="text-gray-800 font-medium">{employee.name}</p>
-              <p className="text-gray-500">ID: {employee.id}</p>
+              <p className="text-gray-500">Role: {employee.role}</p>
             </div>
             <select
               value={employee.role}
@@ -56,7 +82,6 @@ const RoleManagement: React.FC = () => {
               <option value="Intern">Intern</option>
               <option value="Developer">Developer</option>
               <option value="Managing">Managing</option>
-              <option value="Admin">Admin</option>
             </select>
           </li>
         ))}

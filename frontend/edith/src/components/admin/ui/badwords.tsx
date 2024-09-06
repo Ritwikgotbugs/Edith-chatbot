@@ -1,15 +1,24 @@
-// components/Admin/BadWordsManagement.tsx
-
+import { db } from '@/firebase/client';
+import { getDocs, collection, addDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 
 const BadWordsManagement: React.FC = () => {
   const [badWord, setBadWord] = useState('');
   const [badWordsList, setBadWordsList] = useState<string[]>([]);
 
-  const handleAddBadWord = () => {
+  const handleAddBadWord = async () => {
     if (badWord.trim() !== '') {
-      setBadWordsList([...badWordsList, badWord.trim()]);
-      setBadWord('');
+      const newBadWord = badWord.trim();
+      
+      try {
+        await addDoc(collection(db, 'badwords'), { word: newBadWord });
+
+        setBadWordsList([...badWordsList, newBadWord]);
+        setBadWord('');
+
+      } catch (error) {
+        console.error('Error adding bad word to Firestore: ', error);
+      }
     }
   };
 
