@@ -18,7 +18,6 @@ const MainLayout: React.FC = () => {
       <div className="flex-1 flex flex-col">
         <Header />
         <MainContent />
-        <Footer />
       </div>
     </div>
   );

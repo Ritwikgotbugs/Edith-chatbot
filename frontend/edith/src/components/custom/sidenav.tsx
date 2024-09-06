@@ -54,7 +54,7 @@ const SidebarContent: React.FC = () => {
 
   return (
     <aside
-      className={`transition-width duration-300 bg-gray-800 text-white p-4 space-y-4 flex flex-col justify-between h-full ${
+      className={`transition-width duration-300 bg-gray-800 text-white p-4 space-y-4 flex flex-col justify-between h-screen ${
         isCollapsed ? 'w-20' : 'w-64'
       }`}
     >

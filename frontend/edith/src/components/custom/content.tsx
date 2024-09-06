@@ -3,7 +3,7 @@ import axios from 'axios';
 import { db, storage } from '@/firebase/client';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { FaFilePdf } from 'react-icons/fa';
-import { getDocs, collection } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'sonner';
 
 const MainContent: React.FC = () => {
@@ -24,37 +24,72 @@ const MainContent: React.FC = () => {
     setChatLog(newChatLog);
     setPrompt('');
 
-    console.log('Bad Words:', badWordsList);
+    const lowerPrompt = prompt.toLowerCase();
 
-    if (prompt.toLowerCase().includes('hr policy')) {
+    if (lowerPrompt.includes('hr policy')) {
       try {
         const hrPolicyUrl = await fetchHRPolicy();
+        await saveKeywordToGraph('hr-policy');
         setChatLog([...newChatLog, { message: '', isBot: true, pdfUrl: hrPolicyUrl }]);
       } catch (err) {
         setError('Failed to fetch the HR policy. Please try again.');
       }
     } 
-    else if (splitPrompt(prompt).some(word => badWordsList.includes(word))) {
-      setChatLog([...newChatLog, { message: 'Please refrain from using inappropriate language.', isBot: true }]);
+    else if (lowerPrompt.includes('it support')) {
+      try {
+        await saveKeywordToGraph('it-support');
+        const result = await processPrompt(newChatLog);
+        setChatLog(result);
+      } catch (err) {
+        setError('Failed to process the IT support query. Please try again.');
+      }
     } 
     else {
       try {
-        const formData = new FormData();
-        formData.append('prompt', prompt); 
-
-        const result = await axios.post('http://localhost:5000/process', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        setChatLog([...newChatLog, { message: result.data.result, isBot: true }]);
+        const result = await processPrompt(newChatLog);
+        setChatLog(result);
+        await saveKeywordToGraph('general');
       } catch (err) {
         toast.error('Failed to process the prompt. Please try again.');
       }
     }
 
     setLoading(false);
+  };
+
+  const processPrompt = async (newChatLog: { message: string, isBot: boolean }[]) => {
+    const formData = new FormData();
+    formData.append('prompt', prompt); 
+
+    const result = await axios.post('http://localhost:5000/process', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return [...newChatLog, { message: result.data.result, isBot: true }];
+  };
+
+  const saveKeywordToGraph = async (keyword: string) => {
+    try {
+      const keywordRef = doc(db, 'graph', keyword);
+      const keywordDoc = await getDocs(collection(db, 'graph'));
+      
+      const keywordExists = keywordDoc.docs.some(doc => doc.id === keyword);
+
+      if (keywordExists) {
+        const existingDoc = keywordDoc.docs.find(doc => doc.id === keyword);
+        const frequency = existingDoc?.data().frequency || 0;
+        await updateDoc(keywordRef, { frequency: frequency + 1 });
+      } else {
+        await setDoc(keywordRef, { keyword, frequency: 1 });
+      }
+
+      console.log(`Keyword ${keyword} saved to graph.`);
+    } catch (err) {
+      console.error('Error saving keyword to graph:', err);
+      toast.error('Error saving keyword.');
+    }
   };
 
   const fetchHRPolicy = async (): Promise<string> => {
@@ -80,8 +115,7 @@ const MainContent: React.FC = () => {
 
   return (
     <main className="flex-1 flex flex-col justify-between p-8">
-      {/* Chat Log */}
-      <div className="flex flex-col space-y-4 bg-gray-800 p-6 rounded-lg overflow-auto h-3/4">
+      <div className="flex flex-col space-y-4 bg-gray-800 p-6 rounded-lg overflow-y-auto h-96">
         {chatLog.map((chat, index) => (
           <div
             key={index}
@@ -99,7 +133,6 @@ const MainContent: React.FC = () => {
         ))}
       </div>
 
-      {/* Prompt Input */}
       <div className="flex items-center mt-4">
         <input
           type="text"
@@ -110,14 +143,19 @@ const MainContent: React.FC = () => {
         />
         <button
           className="ml-4 p-4 bg-blue-600 text-white rounded"
-          onClick={handleSendPrompt}
+          onClick={ ()=> {
+            if (splitPrompt(prompt).some(word => badWordsList.includes(word))) {
+              toast.error('Your prompt contains bad words. Please rephrase.');
+              return;
+            }
+            handleSendPrompt();
+          }}
           disabled={loading}
         >
           {loading ? 'Processing...' : 'Send'}
         </button>
       </div>
 
-      {/* Error Message */}
       {error && <p className="text-red-500 mt-4">{error}</p>}
     </main>
   );
