@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { db, storage } from '@/firebase/client';
-import { ref, getDownloadURL } from 'firebase/storage';
-import { FaFilePdf } from 'react-icons/fa';
-import { collection, getDocs, doc, updateDoc, setDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import DocMessage from '../chat/doc-reply';
+import { fetchBadWords, fetchHRPolicy, saveKeywordToGraph, processPrompt, splitPrompt } from '@/firebase/utils/utils';
 
 const MainContent: React.FC = () => {
   const [prompt, setPrompt] = useState('');
@@ -14,7 +11,11 @@ const MainContent: React.FC = () => {
   const [badWordsList, setBadWordsList] = useState<string[]>([]);
 
   useEffect(() => {
-    fetchBadWords();
+    const fetchData = async () => {
+      const words = await fetchBadWords();
+      setBadWordsList(words);
+    };
+    fetchData();
   }, []);
 
   const handleSendPrompt = async () => {
@@ -37,8 +38,8 @@ const MainContent: React.FC = () => {
     } 
     else if (lowerPrompt.includes('it support')) {
       try {
-        await saveKeywordToGraph('it-support');
-        const result = await processPrompt(newChatLog);
+        await saveKeywordToGraph('IT-support');
+        const result = await processPrompt(newChatLog, prompt);
         setChatLog(result);
       } catch (err) {
         setError('Failed to process the IT support query. Please try again.');
@@ -46,7 +47,7 @@ const MainContent: React.FC = () => {
     } 
     else {
       try {
-        const result = await processPrompt(newChatLog);
+        const result = await processPrompt(newChatLog, prompt);
         setChatLog(result);
         await saveKeywordToGraph('general');
       } catch (err) {
@@ -57,75 +58,16 @@ const MainContent: React.FC = () => {
     setLoading(false);
   };
 
-  const processPrompt = async (newChatLog: { message: string, isBot: boolean }[]) => {
-    const formData = new FormData();
-    formData.append('prompt', prompt); 
-
-    const result = await axios.post('http://localhost:5000/process', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    return [...newChatLog, { message: result.data.result, isBot: true }];
-  };
-
-  const saveKeywordToGraph = async (keyword: string) => {
-    try {
-      const keywordRef = doc(db, 'graph', keyword);
-      const keywordDoc = await getDocs(collection(db, 'graph'));
-      
-      const keywordExists = keywordDoc.docs.some(doc => doc.id === keyword);
-
-      if (keywordExists) {
-        const existingDoc = keywordDoc.docs.find(doc => doc.id === keyword);
-        const frequency = existingDoc?.data().frequency || 0;
-        await updateDoc(keywordRef, { frequency: frequency + 1 });
-      } else {
-        await setDoc(keywordRef, { keyword, frequency: 1 });
-      }
-
-      console.log(`Keyword ${keyword} saved to graph.`);
-    } catch (err) {
-      console.error('Error saving keyword to graph:', err);
-      toast.error('Error saving keyword.');
-    }
-  };
-
-  const fetchHRPolicy = async (): Promise<string> => {
-    const policyRef = ref(storage, 'HR-policy.pdf');
-    const downloadUrl = await getDownloadURL(policyRef);
-    return downloadUrl;
-  };
-
-  const fetchBadWords = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'badwords'));
-      const badWordsList = querySnapshot.docs.map(doc => doc.data().word);
-      setBadWordsList(badWordsList);
-    } catch (error) {
-      console.error('Error fetching bad words from Firestore:', error);
-      toast.error('Error fetching bad words.');
-    }
-  };
-
-  const splitPrompt = (prompt: string): string[] => {
-    return prompt.split(' ').map(word => word.toLowerCase());
-  };
-
   return (
     <main className="flex-1 flex flex-col justify-between p-8">
-      <div className="flex flex-col space-y-4 bg-gray-800 p-6 rounded-lg overflow-y-auto h-96">
+      <div className="flex flex-col space-y-4 bg-[#232323] p-6 rounded-lg overflow-y-auto h-96 custom-scrollbar">
         {chatLog.map((chat, index) => (
           <div
             key={index}
-            className={`p-4 rounded-lg ${chat.isBot ? 'bg-gray-700 text-white' : 'bg-blue-600 text-white self-end'}`}
+            className={`p-4 rounded-xl ${chat.isBot ? 'bg-[#303030] text-white self-start' : 'bg-white text-black self-end'}`}
           >
             {chat.pdfUrl ? (
-              <div className="flex items-center space-x-2 cursor-pointer" onClick={() => window.open(chat.pdfUrl, '_blank')}>
-                <FaFilePdf className="text-red-600 text-2xl" />
-                <span>HR-policy.pdf</span>
-              </div>
+              <DocMessage pdfurl={chat.pdfUrl} />
             ) : (
               <span>{chat.message}</span>
             )}
@@ -133,16 +75,16 @@ const MainContent: React.FC = () => {
         ))}
       </div>
 
-      <div className="flex items-center mt-4">
+      <div className="flex items-center mt-4 border-none text-black">
         <input
           type="text"
           placeholder="Type your prompt here..."
-          className="flex-grow p-4 rounded bg-gray-700 text-white"
+          className="flex-grow p-4 rounded-xl bg-[#232323] text-white "
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
         />
         <button
-          className="ml-4 p-4 bg-blue-600 text-white rounded"
+          className="ml-4 p-4 bg-[#212121] text-white rounded-xl"
           onClick={ ()=> {
             if (splitPrompt(prompt).some(word => badWordsList.includes(word))) {
               toast.error('Your prompt contains bad words. Please rephrase.');
