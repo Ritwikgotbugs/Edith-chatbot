@@ -1,89 +1,100 @@
 import React from 'react';
+import { FaUserShield, FaFingerprint, FaFileAlt, FaCogs, FaUsers } from 'react-icons/fa';
 
 const ComponentsSection = () => {
   return (
-    <section className="bg-[#19191b] min-h-screen" id='components-section'>
+    <section className="bg-[#19191b] min-h-screen" id="components-section">
       <div className="container px-6 py-10 mx-auto">
-        <h1 className="text-3xl font-semibold text-gray-800 capitalize lg:text-4xl dark:text-white">
+        <h1 className="text-3xl font-semibold text-white capitalize lg:text-4xl dark:text-white">
           Explore our <br /> awesome <span className="underline decoration-blue-500">Components</span>
         </h1>
-        
-        <p className="mt-4 text-gray-500 xl:mt-6 dark:text-gray-300">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nostrum quam voluptatibus
+
+        <p className="mt-4 text-white xl:mt-6 dark:text-gray-300">
+          Discover the powerful tools and features we offer to make your experience seamless and productive.
         </p>
+
         
-        <div className="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-12 md:grid-cols-2 xl:grid-cols-3">
-          <div className="p-8 space-y-3 border-2 border-blue-400 dark:border-blue-300 rounded-xl transform transition-transform hover:scale-105 hover:bg-[#364150]">
-            <span className="inline-block text-blue-500 dark:text-blue-400">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
-              </svg>
-            </span>
+        <div className="relative mt-8 xl:mt-14">
+          
+          <div className="flex space-x-4 overflow-x-auto hide-scrollbar py-4 px-4">
+            
+            <div className="flex-shrink-0 min-w-[300px] max-w-[300px] min-h-[400px] max-h-[400px] p-8 space-y-3 border-2 border-blue-400 dark:border-blue-300 rounded-xl transform transition-transform duration-300 ease-out hover:scale-105 hover:z-20 hover:bg-[#364150]">
+              <span className="inline-block text-blue-500 dark:text-blue-400">
+                <FaUserShield className="w-8 h-8" />
+              </span>
 
-            <h2 className="text-2xl font-semibold text-gray-700 capitalize dark:text-white">Elegant Dark Mode</h2>
+              <h2 className="text-2xl font-semibold text-white capitalize dark:text-white">HR and IT Support</h2>
 
-            <p className="text-gray-500 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident ab nulla quod dignissimos vel non corrupti doloribus voluptatum eveniet
-            </p>
+              <p className="text-white dark:text-gray-300">
+                Seamlessly get support for HR and IT-related issues with integrated helpdesk solutions that keep your productivity on track.
+              </p>
+            </div>
 
-            <a
-              href="#"
-              className="inline-flex p-2 text-blue-500 capitalize transition-colors duration-200 transform bg-blue-100 rounded-full dark:bg-blue-500 dark:text-white hover:underline hover:text-blue-600 dark:hover:text-blue-500"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </a>
-          </div>
+            {/* Feature 2: Two-Factor Authentication (2FA) */}
+            <div className="flex-shrink-0 min-w-[300px] max-w-[300px] min-h-[400px] max-h-[400px] p-8 space-y-3 border-2 border-blue-400 dark:border-blue-300 rounded-xl transform transition-transform duration-300 ease-out hover:scale-105 hover:z-20 hover:bg-[#364150]">
+              <span className="inline-block text-blue-500 dark:text-blue-400">
+                <FaFingerprint className="w-8 h-8" />
+              </span>
 
-          <div className="p-8 space-y-3 border-2 border-blue-400 dark:border-blue-300 rounded-xl transform transition-transform hover:scale-105 hover:bg-[#364150]">
-            <span className="inline-block text-blue-500 dark:text-blue-400">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
-              </svg>
-            </span>
+              <h2 className="text-2xl font-semibold text-white capitalize dark:text-white">Two-Factor Authentication</h2>
 
-            <h2 className="text-2xl font-semibold text-gray-700 capitalize dark:text-white">Easy Customizations</h2>
+              <p className="text-white dark:text-gray-300">
+                Enhance security with 2FA to safeguard sensitive data and provide an additional layer of protection for user accounts.
+              </p>
+            </div>
 
-            <p className="text-gray-500 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident ab nulla quod dignissimos vel non corrupti doloribus voluptatum eveniet
-            </p>
+            {/* Feature 3: Get and Summarize Documents */}
+            <div className="flex-shrink-0 min-w-[300px] max-w-[300px] min-h-[400px] max-h-[400px] p-8 space-y-3 border-2 border-blue-400 dark:border-blue-300 rounded-xl transform transition-transform duration-300 ease-out hover:scale-105 hover:z-20 hover:bg-[#364150]">
+              <span className="inline-block text-blue-500 dark:text-blue-400">
+                <FaFileAlt className="w-8 h-8" />
+              </span>
 
-            <a
-              href="#"
-              className="inline-flex p-2 text-blue-500 capitalize transition-colors duration-200 transform bg-blue-100 rounded-full dark:bg-blue-500 dark:text-white hover:underline hover:text-blue-600 dark:hover:text-blue-500"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </a>
-          </div>
+              <h2 className="text-2xl font-semibold text-white capitalize dark:text-white">Get & Summarize Documents</h2>
 
-          <div className="p-8 space-y-3 border-2 border-blue-400 dark:border-blue-300 rounded-xl transform transition-transform hover:scale-105 hover:bg-[#364150]">
-            <span className="inline-block text-blue-500 dark:text-blue-400">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
-            </span>
+              <p className="text-white dark:text-gray-300">
+                Retrieve and summarize documents quickly with our smart AI-powered assistant that provides concise information on demand.
+              </p>
+            </div>
 
-            <h2 className="text-2xl font-semibold text-gray-700 capitalize dark:text-white">Simple & Clean Designs</h2>
+            {/* Feature 4: Admin Panel */}
+            <div className="flex-shrink-0 min-w-[300px] max-w-[300px] min-h-[400px] max-h-[400px] p-8 space-y-3 border-2 border-blue-400 dark:border-blue-300 rounded-xl transform transition-transform duration-300 ease-out hover:scale-105 hover:z-20 hover:bg-[#364150]">
+              <span className="inline-block text-blue-500 dark:text-blue-400">
+                <FaCogs className="w-8 h-8" />
+              </span>
 
-            <p className="text-gray-500 dark:text-gray-300">
-              Lorem ipsum sit amet consectetur adipisicing elit. Provident ab nulla quod dignissimos vel non corrupti doloribus voluptatum eveniet
-            </p>
+              <h2 className="text-2xl font-semibold text-white capitalize dark:text-white">Admin Panel</h2>
 
-            <a
-              href="#"
-              className="inline-flex p-2 text-blue-500 capitalize transition-colors duration-200 transform bg-blue-100 rounded-full dark:bg-blue-500 dark:text-white hover:underline hover:text-blue-600 dark:hover:text-blue-500"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </a>
+              <p className="text-white dark:text-gray-300">
+                A comprehensive admin panel that allows you to manage users, settings, and other critical operations with ease.
+              </p>
+            </div>
+
+            {/* Feature 5: Role Management */}
+            <div className="flex-shrink-0 min-w-[300px] max-w-[300px] min-h-[400px] max-h-[400px] p-8 space-y-3 border-2 border-blue-400 dark:border-blue-300 rounded-xl transform transition-transform duration-300 ease-out hover:scale-105 hover:z-20 hover:bg-[#364150]">
+              <span className="inline-block text-blue-500 dark:text-blue-400">
+                <FaUsers className="w-8 h-8" />
+              </span>
+
+              <h2 className="text-2xl font-semibold text-white capitalize dark:text-white">Role Management</h2>
+
+              <p className="text-white dark:text-gray-300">
+                Control and assign user roles seamlessly with our intuitive role management system to ensure proper access and permissions.
+              </p>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* CSS to Hide Scrollbar */}
+      <style jsx>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
+        }
+      `}</style>
     </section>
   );
 };

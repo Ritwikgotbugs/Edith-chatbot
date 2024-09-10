@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import { db, auth } from '@/firebase/client';
+import { auth, db } from '@/firebase/client';
+import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { Home, History, FileText, Menu, ChevronLeft } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '../ui/accordion';
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+import { ChevronLeft, FileText, History, Home, Menu } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Button } from '../ui/button';
 
 interface UserProfile {
   name: string;
@@ -15,33 +16,41 @@ interface UserProfile {
 }
 
 const SidebarContent: React.FC = () => {
-  const [userProfile, setUserProfile] = useState<UserProfile>({ name: '', empID: '', role: '' });
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [loading, setLoading] = useState(true); 
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const docRef = doc(db, 'users', `${auth.currentUser?.uid}`);
-        const docSnap = await getDoc(docRef);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const docRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setUserProfile({
-            name: data.name || '',
-            empID: data.empID || '',
-            role: data.role || '',
-          });
-        } else {
-          console.error('No such document!');
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setUserProfile({
+              name: data.name || '',
+              empID: data.empID || '',
+              role: data.role || '',
+            });
+          } else {
+            console.error('No such document!');
+          }
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
+      } else {
+        setUserProfile(null);
+        setLoading(false); 
       }
-    };
+    });
 
-    fetchUserProfile();
+    return () => unsubscribe();
   }, []);
 
   const toggleSidebar = () => {
@@ -52,33 +61,36 @@ const SidebarContent: React.FC = () => {
     router.push(url);
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <aside
-      className={`transition-width duration-300 bg-gray-800 text-white p-4 space-y-4 flex flex-col justify-between h-full ${
+      className={`transition-width duration-300 bg-[#232323] text-white p-4 space-y-4 flex flex-col justify-between rounded-xl m-4 ${
         isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
       <div>
         <div className="flex justify-between items-center">
-          <Button onClick={toggleSidebar} variant="ghost" className="text-white">
-            {isCollapsed ? <Menu className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          <Button onClick={toggleSidebar} variant="ghost" className="hover:bg-gray-200 hover:text-black">
+            {isCollapsed ? <Menu className="w-5 h-5"/> : <ChevronLeft className="w-5 h-5" />}
           </Button>
         </div>
         <div className={`pb-4 flex justify-center my-5 ${isCollapsed ? 'block' : 'flex items-center'}`}>
           <Avatar className={`${isCollapsed ? 'h-10 w-10' : 'h-20 w-20'}`}>
-            <AvatarImage src="https://images/shadcn" alt={userProfile.name} />
-            <AvatarFallback>{userProfile.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src="https://images/shadcn" alt={userProfile?.name || 'Avatar'} />
+            <AvatarFallback className='text-black'>{userProfile?.name?.charAt(0) || 'A'}</AvatarFallback>
           </Avatar>
-          {!isCollapsed && <p className="ml-2">{userProfile.name}</p>}
         </div>
 
-        {!isCollapsed && (
-          <div className="p-2 text-white mb-5">
+        {!isCollapsed && userProfile && (
+          <div className="p-2 mb-5">
             <h3 className="text-lg font-bold">Name: {userProfile.name}</h3>
             <p>ID: {userProfile.empID}</p>
             <p>
               Role:{' '}
-              <span className="bg-black text-white px-2 py-1 rounded">
+              <span className="bg-black text-white rounded-full text-xs py-1 px-2">
                 {userProfile.role}
               </span>
             </p>
@@ -97,7 +109,7 @@ const SidebarContent: React.FC = () => {
                   <Button
                     variant="ghost"
                     className={`w-full justify-start text-left no-underline hover:no-underline ${
-                      pathname === '/homepage' ? 'bg-gray-700' : ''
+                      pathname === '/homepage' ? 'bg-zinc-400 text-black' : ''
                     }`}
                     onClick={() => navigateTo('/homepage')}
                   >
@@ -106,7 +118,7 @@ const SidebarContent: React.FC = () => {
                   <Button
                     variant="ghost"
                     className={`w-full justify-start text-left no-underline hover:no-underline ${
-                      pathname === '/admin' ? 'bg-gray-700' : ''
+                      pathname === '/admin' ? 'bg-zinc-400 text-black' : ''
                     }`}
                     onClick={() => navigateTo('/admin')}
                   >
