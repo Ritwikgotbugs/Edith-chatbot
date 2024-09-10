@@ -5,9 +5,12 @@ from werkzeug.utils import secure_filename
 import google.generativeai as genai
 import tempfile
 import PyPDF2
+from dotenv import load_dotenv
 
-# Configure Google API
-api_key = "AIzaSyD7zakq__erEUjr641l0XESPPAOx1WMmCg"
+load_dotenv()
+
+
+api_key = os.getenv('GEMINI_API')
 genai.configure(api_key=api_key)
 
 app = Flask(__name__)
