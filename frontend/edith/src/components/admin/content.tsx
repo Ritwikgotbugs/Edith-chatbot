@@ -26,7 +26,7 @@ const AdminPage: React.FC = () => {
               <DialogHeader>
                 <DialogTitle>Bad Words Management</DialogTitle>
                 <DialogDescription>
-                  Manage your application's bad words list here.
+                  Manage your application&apos;s bad words list here.
                 </DialogDescription>
               </DialogHeader>
               <BadWordsManagement />
