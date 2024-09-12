@@ -4,6 +4,10 @@ import { collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
 import { getDownloadURL, ref } from 'firebase/storage';
 import { toast } from 'sonner';
 
+interface ProcessResponse {
+  result: string;
+}
+
 export const fetchHRPolicy = async (): Promise<string> => {
   const policyRef = ref(storage, 'HR-policy.pdf');
   const downloadUrl = await getDownloadURL(policyRef);
@@ -44,7 +48,6 @@ export const fetchBadWords = async (): Promise<string[]> => {
   }
 };
 
-
 export const processPrompt = async (
   newChatLog: { message: string, isBot: boolean }[],
   prompt: string
@@ -52,7 +55,7 @@ export const processPrompt = async (
   const formData = new FormData();
   formData.append('prompt', prompt);
 
-  const result = await axios.post('http://localhost:5000/process', formData, {
+  const result = await axios.post<ProcessResponse>('http://localhost:5000/process', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -64,4 +67,3 @@ export const processPrompt = async (
 export const splitPrompt = (prompt: string): string[] => {
   return prompt.split(' ').map(word => word.toLowerCase());
 };
-
