@@ -11,7 +11,7 @@ api_key="AIzaSyD7zakq__erEUjr641l0XESPPAOx1WMmCg"
 genai.configure(api_key=api_key)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://edith-chatbot.vercel.app/", "http://localhost:3000"])
 
 def extract_text_from_pdf(pdf_path):
     with open(pdf_path, 'rb') as file:
