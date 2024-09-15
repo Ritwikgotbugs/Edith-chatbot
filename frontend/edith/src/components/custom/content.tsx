@@ -59,8 +59,8 @@ const MainContent: React.FC = () => {
   };
 
   return (
-    <main className="flex-1 flex flex-col justify-between p-8">
-      <div className="flex flex-col space-y-4 bg-[#232323] p-6 rounded-lg overflow-y-auto h-96 custom-scrollbar">
+    <main className="flex-1 flex flex-col justify-between p-4">
+      <div className="flex flex-col space-y-4 bg-[#232323] p-4 rounded-lg overflow-y-auto h-full custom-scrollbar">
         {chatLog.map((chat, index) => (
           <div
             key={index}
