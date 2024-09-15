@@ -37,7 +37,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onVerificationSent }) => {
         toast.success('Verification email sent to your inbox.');
 
         const empID = generateRandomID(5);
-        const roles = ['Intern', 'developer', 'manager'];
+        const roles = ['Intern', 'Developer', 'Manager'];
         const role = roles[Math.floor(Math.random() * roles.length)];
 
         const userProfile = { name, empID, role };

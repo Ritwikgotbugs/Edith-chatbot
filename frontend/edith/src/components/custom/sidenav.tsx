@@ -1,5 +1,5 @@
 import { auth, db } from '@/firebase/client';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { ChevronLeft, FileText, History, Home, Menu } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -8,6 +8,9 @@ import React, { useEffect, useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
+import { TbLogout2 } from "react-icons/tb";
+import { toast } from 'sonner';
+
 
 interface UserProfile {
   name: string;
@@ -21,6 +24,21 @@ const SidebarContent: React.FC = () => {
   const [loading, setLoading] = useState(true); 
   const router = useRouter();
   const pathname = usePathname();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      router.replace('/login');
+      toast.success('Successfully signed out', {
+        style:{
+          backgroundColor: '#22c55e',
+          color: 'black',
+        }
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -150,6 +168,10 @@ const SidebarContent: React.FC = () => {
           </AccordionItem>
         </Accordion>
       </div>
+        <Button
+          variant="destructive"
+          className="w-full text-left no-underline hover:no-underline"
+          onClick={handleSignOut}> {isCollapsed? <TbLogout2/> : 'Logout'} </Button>
     </aside>
   );
 };
