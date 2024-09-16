@@ -3,5 +3,3 @@ export interface User {
     name: string;
     role: 'Intern' | 'developer' | 'manager';
   }
-  
-  

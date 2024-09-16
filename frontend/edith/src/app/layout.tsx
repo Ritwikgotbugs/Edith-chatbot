@@ -9,13 +9,17 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
+export const metadata = {
+  title: "Edith-Chatbot",
+};
+
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}
-      <Toaster />
+      <body className={inter.className}>
+        {children}
+        <Toaster />
       </body>
-     
     </html>
   );
 }

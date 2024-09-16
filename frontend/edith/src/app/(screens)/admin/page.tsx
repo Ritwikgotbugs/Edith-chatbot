@@ -1,8 +1,8 @@
 'use client';
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import React, { useState, KeyboardEvent } from 'react';
+import { useRouter } from 'next/navigation'; // Correct import for Next.js 13+
 import { toast } from 'sonner';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import MainLayout from "@/components/admin/layout";
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 const PasswordDialog: React.FC<{ onPasswordSuccess: () => void }> = ({ onPasswordSuccess }) => {
   const [password, setPassword] = useState('');
   const correctPassword = 'admin';
+  const router = useRouter(); // Updated import
 
   const handleSubmit = () => {
     if (password === correctPassword) {
@@ -19,21 +20,30 @@ const PasswordDialog: React.FC<{ onPasswordSuccess: () => void }> = ({ onPasswor
     }
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
+  const handleDialogClose = () => {
+    router.push('/homepage'); // Redirect to home page on dialog close
+  };
+
   return (
-    <Dialog open>
-      <DialogContent>
+    <Dialog open onOpenChange={handleDialogClose}>
+      <DialogContent className="bg-black text-white">
         <DialogHeader>
-          <DialogTitle>Enter Password</DialogTitle>
-          <DialogDescription>
-            Please enter the password to access this page.
-          </DialogDescription>
+          <DialogTitle>Enter Admin Password</DialogTitle>
+
         </DialogHeader>
         <Input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password"
-          className="mt-4"
+          className="mt-4 bg-zinc-900 text-white placeholder-gray-400"
+          onKeyDown={handleKeyDown}
         />
         <div className="mt-6 flex justify-end space-x-4">
           <Button variant="secondary" onClick={handleSubmit}>
@@ -49,11 +59,11 @@ export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
-    <>
+    <div className="bg-neutral-600 min-h-screen text-white">
       {!isAuthenticated && (
         <PasswordDialog onPasswordSuccess={() => setIsAuthenticated(true)} />
       )}
       {isAuthenticated && <MainLayout />}
-    </>
+    </div>
   );
 }

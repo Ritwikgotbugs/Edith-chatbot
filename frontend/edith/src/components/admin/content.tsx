@@ -19,19 +19,20 @@ const AdminPage: React.FC = () => {
         <Dialog>
           <DialogTrigger asChild>
             <div
-              className="cursor-pointer p-6 bg-gray-800 hover:bg-gray-900 text-white rounded-xl flex-1 flex items-center justify-center text-xl font-semibold"
+              className="cursor-pointer p-6 bg-orange-600 hover:bg-orange-800 text-white rounded-xl flex-1 flex items-center justify-center text-xl font-semibold"
               onClick={() => setActiveTab('badWords')}
             >
               Bad Words Management
             </div>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className='bg-zinc-900 text-white'>
             <DialogHeader>
-              <DialogTitle>Bad Words Management</DialogTitle>
+            <DialogTitle></DialogTitle>
               <DialogDescription>
-                Manage your application's bad words list here.
+      
               </DialogDescription>
             </DialogHeader>
+            
             <BadWordsManagement />
           </DialogContent>
         </Dialog>
@@ -40,17 +41,17 @@ const AdminPage: React.FC = () => {
         <Dialog>
           <DialogTrigger asChild>
             <div
-              className="cursor-pointer p-6 bg-gray-800 hover:bg-gray-900 text-white rounded-xl flex-1 flex items-center justify-center text-xl font-semibold"
+              className="cursor-pointer p-6 bg-orange-600 hover:bg-orange-800 text-white rounded-xl flex-1 flex items-center justify-center text-xl font-semibold"
               onClick={() => setActiveTab('roleManagement')}
             >
               Role Management
             </div>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className='bg-zinc-900 text-white'>
             <DialogHeader>
-              <DialogTitle>Role Management</DialogTitle>
+              <DialogTitle></DialogTitle>
               <DialogDescription>
-                Manage roles for users within the application.
+            
               </DialogDescription>
             </DialogHeader>
             <RoleManagement />
@@ -61,17 +62,17 @@ const AdminPage: React.FC = () => {
         <Dialog>
           <DialogTrigger asChild>
             <div
-              className="cursor-pointer p-6 bg-gray-800 hover:bg-gray-900 text-white rounded-xl flex-1 flex items-center justify-center text-xl font-semibold"
+              className="cursor-pointer p-6 bg-orange-600 hover:bg-orange-800 text-white rounded-xl flex-1 flex items-center justify-center text-xl font-semibold"
               onClick={() => setActiveTab('documentUpdate')}
             >
               Document Update
             </div>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className='bg-zinc-900 text-white'>
             <DialogHeader>
-              <DialogTitle>Document Update</DialogTitle>
+              <DialogTitle></DialogTitle>
               <DialogDescription>
-                Update and manage your documents.
+               
               </DialogDescription>
             </DialogHeader>
             <DocumentUpdate />
