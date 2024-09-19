@@ -6,6 +6,7 @@ const FileUpload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [downloadURL, setDownloadURL] = useState<string | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<string>('interns');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -13,10 +14,14 @@ const FileUpload: React.FC = () => {
     }
   };
 
+  const handleFolderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedFolder(event.target.value);
+  };
+
   const handleUpload = () => {
     if (!file) return;
 
-    const fileRef = ref(storage, file.name);
+    const fileRef = ref(storage, `${selectedFolder}/${file.name}`);
     const uploadTask = uploadBytesResumable(fileRef, file);
 
     uploadTask.on(
@@ -38,6 +43,11 @@ const FileUpload: React.FC = () => {
 
   return (
     <div>
+      <select onChange={handleFolderChange} value={selectedFolder}>
+        <option value="interns">Interns</option>
+        <option value="managers">Manager</option>
+        <option value="developers">Developer</option>
+      </select>
       <input type="file" onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload</button>
       {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
