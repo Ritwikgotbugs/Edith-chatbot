@@ -60,11 +60,11 @@ const MainContent: React.FC = () => {
 
   return (
     <main className="flex-1 flex flex-col justify-between p-8">
-      <div className="flex flex-col space-y-4 bg-[#232323] p-6 rounded-lg overflow-y-auto h-96 custom-scrollbar">
+      <div className="flex flex-col space-y-4 bg-zinc-900 p-6 rounded-2xl overflow-y-auto h-96 custom-scrollbar">
         {chatLog.map((chat, index) => (
           <div
             key={index}
-            className={`p-4 rounded-xl ${chat.isBot ? 'bg-[#303030] text-white self-start' : 'bg-white text-black self-end'}`}
+            className={`p-4 rounded-xl ${chat.isBot ? 'bg-zinc-600 text-white self-start' : 'bg-white text-black self-end'}`}
           >
             {chat.pdfUrl ? (
               <DocMessage pdfurl={chat.pdfUrl} />
@@ -75,17 +75,17 @@ const MainContent: React.FC = () => {
         ))}
       </div>
 
-      <div className="flex items-center mt-4 border-none text-black">
+      <div className="flex items-center mt-4">
         <input
           type="text"
           placeholder="Type your prompt here..."
-          className="flex-grow p-4 rounded-xl bg-[#232323] text-white "
+          className="flex-grow p-3 rounded bg-zinc-600 text-white focus:outline-none"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
         />
         <button
-          className="ml-4 p-4 bg-[#212121] text-white rounded-xl"
-          onClick={ ()=> {
+          className="p-3 ml-2 rounded-l bg-blue-600 rounded-r text-white"
+          onClick={() => {
             if (splitPrompt(prompt).some(word => badWordsList.includes(word))) {
               toast.error('Your prompt contains bad words. Please rephrase.');
               return;

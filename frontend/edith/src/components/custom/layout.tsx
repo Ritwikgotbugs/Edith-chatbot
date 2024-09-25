@@ -13,11 +13,12 @@ const MainLayout: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#111111] text-white">
+    <div className="flex h-screen bg-zinc-800 text-white">
       <Sidebar/>
       <div className="flex-1 flex flex-col">
         <Header />
         <MainContent />
+        <Footer />
       </div>
     </div>
   );

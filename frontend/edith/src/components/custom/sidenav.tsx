@@ -11,7 +11,6 @@ import { Button } from '../ui/button';
 import { TbLogout2 } from "react-icons/tb";
 import { toast } from 'sonner';
 
-
 interface UserProfile {
   name: string;
   empID: string;
@@ -21,7 +20,7 @@ interface UserProfile {
 const SidebarContent: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -30,15 +29,15 @@ const SidebarContent: React.FC = () => {
       await signOut(auth);
       router.replace('/login');
       toast.success('Successfully signed out', {
-        style:{
+        style: {
           backgroundColor: '#22c55e',
           color: 'black',
-        }
+        },
       });
     } catch (error) {
       console.error('Error signing out:', error);
     }
-  }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -64,7 +63,7 @@ const SidebarContent: React.FC = () => {
         }
       } else {
         setUserProfile(null);
-        setLoading(false); 
+        setLoading(false);
       }
     });
 
@@ -85,23 +84,26 @@ const SidebarContent: React.FC = () => {
 
   return (
     <aside
-      className={`transition-width duration-300 bg-[#232323] text-white p-4 space-y-4 flex flex-col justify-between rounded-xl m-4 ${
+      className={`transition-all duration-500 ease-in-out bg-zinc-900 text-white p-4 space-y-4 flex flex-col justify-between rounded-xl m-4 ${
         isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
       <div>
         <div className="flex justify-between items-center">
           <Button onClick={toggleSidebar} variant="ghost" className="hover:bg-gray-200 hover:text-black">
-            {isCollapsed ? <Menu className="w-5 h-5"/> : <ChevronLeft className="w-5 h-5" />}
+            {isCollapsed ? <Menu className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
           </Button>
         </div>
+
+        {/* Profile Avatar */}
         <div className={`pb-4 flex justify-center my-5 ${isCollapsed ? 'block' : 'flex items-center'}`}>
           <Avatar className={`${isCollapsed ? 'h-10 w-10' : 'h-20 w-20'}`}>
             <AvatarImage src="https://images/shadcn" alt={userProfile?.name || 'Avatar'} />
-            <AvatarFallback className='text-black'>{userProfile?.name?.charAt(0) || 'A'}</AvatarFallback>
+            <AvatarFallback className="text-black">{userProfile?.name?.charAt(0) || 'A'}</AvatarFallback>
           </Avatar>
         </div>
 
+        {/* User Profile Details */}
         {!isCollapsed && userProfile && (
           <div className="p-2 mb-5">
             <h3 className="text-lg font-bold">Name: {userProfile.name}</h3>
@@ -115,6 +117,7 @@ const SidebarContent: React.FC = () => {
           </div>
         )}
 
+        {/* Accordion Menu */}
         <Accordion type="single" collapsible className="space-y-2">
           <AccordionItem value="home" className="border-none">
             <AccordionTrigger className="flex items-center text-left no-underline hover:no-underline">
@@ -168,10 +171,16 @@ const SidebarContent: React.FC = () => {
           </AccordionItem>
         </Accordion>
       </div>
-        <Button
-          variant="destructive"
-          className="w-full text-left no-underline hover:no-underline"
-          onClick={handleSignOut}> {isCollapsed? <TbLogout2/> : 'Logout'} </Button>
+
+      {/* Logout Button */}
+      <Button
+        variant="ghost"
+        className="mt-4 w-full flex items-center bg-red-600 hover:bg-red-800 justify-center text-white"
+        onClick={handleSignOut}
+      >
+        <TbLogout2 className="w-5 h-5 mr-2" />
+        {isCollapsed ? null : 'Logout'}
+      </Button>
     </aside>
   );
 };
